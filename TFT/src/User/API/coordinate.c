@@ -14,7 +14,6 @@ static float levelCornerPosition[5]; // buffer current z value measured, positio
  */
 static float extruderPostion = 0.0f;
 
-//
 static bool relative_mode = false;
 static bool relative_e = false;
 // false means current position is unknown
@@ -52,6 +51,11 @@ void coordinateSetKnown(bool known)
   position_known = known;
 }
 
+float coordinateGetAxisTarget(AXIS axis)
+{
+  return targetPosition.axis[axis];
+}
+
 void coordinateSetAxisTarget(AXIS axis, float position)
 {
   bool r = (axis == E_AXIS) ? relative_e || relative_mode : relative_mode;
@@ -66,14 +70,14 @@ void coordinateSetAxisTarget(AXIS axis, float position)
   }
 }
 
+uint32_t coordinateGetFeedRate(void)
+{
+  return targetPosition.feedrate;
+}
+
 void coordinateSetFeedRate(uint32_t feedrate)
 {
   targetPosition.feedrate = feedrate;
-}
-
-float coordinateGetAxisTarget(AXIS axis)
-{
-  return targetPosition.axis[axis];
 }
 // Set level corner position the measured Z offset from probe, see in ABL.c menu refreshLevelCornerValue(MENUITEMS levelItems) and value get from parseACK.c
 void SetLevelCornerPosition(int point,float position)
@@ -86,19 +90,9 @@ float GetLevelCornerPosition(int point)
     return levelCornerPosition[point];
 }
 
-uint32_t coordinateGetFeedRate(void)
-{
-  return targetPosition.feedrate;
-}
-
 void coordinateGetAll(COORDINATE *tmp)
 {
   memcpy(tmp, &targetPosition, sizeof(targetPosition));
-}
-
-void coordinateSetExtruderActualSteps(float steps)
-{
-  curPosition.axis[E_AXIS] = extruderPostion = steps / getParameter(P_STEPS_PER_MM, E_AXIS);
 }
 
 float coordinateGetExtruderActual(void)
@@ -106,14 +100,19 @@ float coordinateGetExtruderActual(void)
   return extruderPostion;
 }
 
-void coordinateSetAxisActual(AXIS axis, float position)
+void coordinateSetExtruderActualSteps(float steps)
 {
-  curPosition.axis[axis] = position;
+  curPosition.axis[E_AXIS] = extruderPostion = steps / getParameter(P_STEPS_PER_MM, E_AXIS);
 }
 
 float coordinateGetAxisActual(AXIS axis)
 {
   return curPosition.axis[axis];
+}
+
+void coordinateSetAxisActual(AXIS axis, float position)
+{
+  curPosition.axis[axis] = position;
 }
 
 void coordinateQuerySetWait(bool wait)
