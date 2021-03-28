@@ -19,7 +19,6 @@ const MENUITEMS levelcornerItems = {
 
 LIVE_INFO lvIcon;
 
-
 void ScanLevelCorner(u8 pointer)
 {
   s16 pointPosition[4][2] = {
@@ -33,7 +32,7 @@ void ScanLevelCorner(u8 pointer)
   {
     mustStoreCmd("M401\n");
     mustStoreCmd("G30 E0 X%d Y%d\n", (s16)pointPosition[pointer][0], (s16)pointPosition[pointer][1]);
-	mustStoreCmd("G1 Z10\n");
+	  mustStoreCmd("G1 Z10\n");
   }
   else
   {
@@ -41,6 +40,7 @@ void ScanLevelCorner(u8 pointer)
   }
 
   mustStoreCmd("M17 X Y Z\n");
+  mustStoreCmd("M18 S0 X Y Z\n");
 }
 
 void refreshLevelCornerValue(MENUITEMS levelItems)
@@ -62,7 +62,7 @@ void refreshLevelCornerValue(MENUITEMS levelItems)
     {
       valPos = (int)GetLevelCornerPosition(0);
       valPosSub = (int)GetLevelCornerPosition(0)-1;
-      sprintf(tempstr, "  %1.4f  ", GetLevelCornerPosition(valPos));
+      sprintf(tempstr, "%1.4f", GetLevelCornerPosition(valPos));
       lvIcon.lines[valPosSub].text = (uint8_t *)tempstr;
       showLevelCornerLiveInfo(valIndex[valPosSub], valPosSub, &lvIcon, &levelItems.items[valIndex[valPosSub]]);
       SetLevelCornerPosition(0, 0);
@@ -141,6 +141,7 @@ void menuLevelCorner(void)
           infoSettings.level_edge = NOBEYOND(LEVELING_EDGE_DISTANCE_MIN, val, LEVELING_EDGE_DISTANCE_MAX);
           infoSettings.level_edge = ((val >= edge_min) ? val : edge_min);
           menuDrawPage(&levelcornerItems);
+          ReadValuestored = 6;
         }
         break;
 
@@ -151,6 +152,7 @@ void menuLevelCorner(void)
       case KEY_ICON_5:
         mustStoreCmd("M48\n");
         mustStoreCmd("M17 X Y Z\n");
+        mustStoreCmd("M18 S0 X Y Z\n");
         break;
 
       case KEY_ICON_6:
