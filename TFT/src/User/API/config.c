@@ -581,6 +581,10 @@ void parseConfigKey(uint16_t index)
       config_set_color(&infoSettings.mesh_max_color);
       break;
 
+    case C_INDEX_TERMINAL_COLOR_SCHEME:
+      SET_VALID_INT_VALUE(infoSettings.terminal_color_scheme, 0, 2);
+      break;
+
     case C_INDEX_ROTATE_UI:
       if (infoSettings.rotate_ui != getOnOff())
       {
@@ -941,6 +945,16 @@ void parseConfigKey(uint16_t index)
           SET_VALID_INT_VALUE(infoSettings.knob_led_idle, 0, 1);
           break;
       #endif
+
+      case C_INDEX_NEOPIXEL_PIXELS:
+      {
+        uint16_t pixels = config_int();
+        if (inLimit(pixels, 0, MAX_NEOPIXEL_PIXELS))
+        {
+          infoSettings.neopixel_pixels = pixels ? pixels : NEOPIXEL_PIXELS;
+        }
+        break;
+      }
     #endif
 
     #ifdef LCD_LED_PWM_CHANNEL
