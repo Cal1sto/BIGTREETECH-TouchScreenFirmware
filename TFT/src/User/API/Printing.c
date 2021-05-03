@@ -396,14 +396,11 @@ void printAbort(void)
       setDialogText(LABEL_SCREEN_INFO, LABEL_BUSY, LABEL_BACKGROUND, LABEL_BACKGROUND);
       showDialog(DIALOG_TYPE_INFO, NULL, NULL, NULL);
 
-      //while (infoHost.printing == true)  // wait for the printer to settle down
       do
       {
-        loopProcess();  // NOTE: it must be executed at leat one time to print the above dialog and avoid a freeze
+        loopProcess();  // NOTE: it is executed at leat one time to print the above splash screen
       }
       while (infoHost.printing == true);  // wait for the printer to settle down
-
-      infoMenu.cur--;
       break;
 
     case TFT_UDISK:
@@ -590,13 +587,13 @@ void loopPrintFromTFT(void)
   uint8_t sd_count = 0;
   UINT    br = 0;
 
-  if (!infoPrinting.printing || infoFile.source >= BOARD_SD) return;
-
-  powerFailedCache(infoPrinting.file.fptr);
-
   if (heatHasWaiting() || infoCmd.count || infoPrinting.pause) return;
 
   if (moveCacheToCmd() == true) return;
+
+  if (!infoPrinting.printing || infoFile.source >= BOARD_SD) return;
+
+  powerFailedCache(infoPrinting.file.fptr);
 
   for (; infoPrinting.cur < infoPrinting.size;)
   {

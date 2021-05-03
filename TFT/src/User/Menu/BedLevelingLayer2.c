@@ -44,8 +44,9 @@ void menuBedLevelingLayer2(void)
 
   if (infoMachineSettings.zProbe == ENABLED)
   {
-    bedLevelingLayer2Items.items[3].icon = ICON_LEVELCORNER;
-    bedLevelingLayer2Items.items[3].label.index = LABEL_LEVELCORNER;
+    bedLevelingLayer2Items.items[3].icon = ICON_LEVEL_CORNER;
+    bedLevelingLayer2Items.items[3].label.index = LABEL_LEVEL_CORNER;
+
     if (infoSettings.touchmi_sensor != 0)
     {
       bedLevelingLayer2Items.items[4].icon = ICON_NOZZLE;
@@ -86,10 +87,6 @@ void menuBedLevelingLayer2(void)
       case KEY_ICON_2:
         if (infoMachineSettings.leveling == BL_UBL)
           menuUBLLoad();
-        break;
-       
-      case KEY_ICON_3:    
-        infoMenu.menu[++infoMenu.cur] = menuLevelCorner;
         break;
 
       case KEY_ICON_3:
